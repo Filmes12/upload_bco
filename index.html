@@ -5,85 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login e Upload para o Google Drive</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: rgba(5, 4, 4, 0.678);
-    }
-    
-    .login-container, .upload-container {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 400px;
-      text-align: center;
-    }
-    
-    .upload-container {
-      display: none; /* Escondido por padrão */
-    }
-    
-    h1 {
-      color: #333;
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    
-    form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    input[type="text"], input[type="password"], select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    
-    button[type="submit"] {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    
-    button[type="submit"]:hover {
-      background-color: #45a049;
-    }
-    
-    .progress-container {
-      margin-top: 20px;
-      height: 20px;
-      background-color: #f0f0f0;
-      border-radius: 4px;
-      overflow: hidden;
-      display: none; /* Inicialmente escondido */
-    }
-    .hidden {
-  display: none;
+   body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(5, 4, 4, 0.678);
 }
 
-    
-    .progress-bar {
-      width: 0%;
-      height: 100%;
-      background-color: #4CAF50;
-      transition: width 0.3s;
-    }
-    .loader {
+.login-container, .upload-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+
+.upload-container {
+  display: none; /* Escondido por padrão */
+}
+
+h1 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input[type="text"], input[type="password"], select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.progress-container {
+  margin-top: 20px;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+  display: none; /* Inicialmente escondido */
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #4CAF50;
+  transition: width 0.3s;
+}
+
+.loader {
   --size-loader: 50px;
   --size-orbe: 10px;
   width: var(--size-loader);
@@ -114,8 +111,7 @@
 }
 
 @keyframes orbit7456 {
-  0% {
-  }
+  0% {}
 
   80% {
     transform: rotate(360deg);
@@ -125,14 +121,26 @@
     transform: rotate(360deg);
   }
 }
+
 .text1 {
   color: gold;
   text-align: left;
 }
+
 #gifs {
   max-width: 100px;
   max-height: auto;
 }
+
+/* Media query para telas menores que 400px */
+@media (max-width: 400px) {
+  .login-container, .upload-container {
+    width: 60%; /* Reduz a largura para ocupar a maior parte da tela */
+    margin: 0 auto; /* Centraliza horizontalmente */
+  }
+}
+
+
   </style>
 </head>
 <body>
