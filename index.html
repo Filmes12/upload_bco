@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login e Upload para o Google Drive</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: rgba(5, 4, 4, 0.678);
+    }
+    
+    .login-container, .upload-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+    
+    .upload-container {
+      display: none; /* Escondido por padrão */
+    }
+    
+    h1 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    input[type="text"], input[type="password"], select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    button[type="submit"] {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    
+    .progress-container {
+      margin-top: 20px;
+      height: 20px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      display: none; /* Inicialmente escondido */
+    }
+    .hidden {
+  display: none;
+}
+
+    
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background-color: #4CAF50;
+      transition: width 0.3s;
+    }
+    .loader {
+  --size-loader: 50px;
+  --size-orbe: 10px;
+  width: var(--size-loader);
+  height: var(--size-loader);
+  position: relative;
+  transform: rotate(45deg);
+}
+
+.orbe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  --delay: calc(var(--index) * 0.1s);
+  animation: orbit7456 ease-in-out 1.5s var(--delay) infinite;
+  opacity: calc(1 - calc(0.2 * var(--index)));
+}
+
+.orbe::after {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  width: var(--size-orbe);
+  height: var(--size-orbe);
+  background-color: #3ae374;
+  box-shadow: 0px 0px 20px 2px #3ae374;
+  border-radius: 50%;
+}
+
+@keyframes orbit7456 {
+  0% {
+  }
+
+  80% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.text1 {
+  color: gold;
+  text-align: left;
+}
+#gifs {
+  max-width: 100px;
+  max-height: auto;
+}
+  </style>
+</head>
+<body>
+  <div class="ui-abstergo">
+  <div class="login-container">
+    <h1>Faça login para fazer upload para o Google Drive</h1>
+    <form id="loginForm">
+      <input type="text" id="username" name="username" placeholder="Usuário" required>
+      <input type="password" id="password" name="password" placeholder="Senha" required>
+      <button type="submit">Login</button>
+      <br> <br>
+      <img id="gifs" src="security.gif" alt="opa" style="display: none;">
+      <br> <br>
+      <h1 id="ver_datas" style="display: none;" >Verificando dados...</h1>
+    </form>
+  </div>
+
+  <div class="upload-container">
+    <h1>Upload para a pasta do Google Drive</h1>
+    <div class="container">
+      <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <select id="folderSelect" name="folder">
+        </select>
+        <input type="file" name="files" multiple>
+        <button type="submit">Enviar</button>
+      </form>
+    
+      <div class="progress-container">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+ // Array de usuários
+const users = [
+  { username: 'usuario1', password: 'senha1', allowedFolders: ['1K4J5ErgUVtepbBpvnLVZrNcOzvUZmtWK', '1WZmMrGVvvR4EYQuCI7v3JsOKmu8sfVDJ'] },
+  { username: 'usuario2', password: 'senha2', allowedFolders: ['1W_IOIWlldNPc3trZVwxZHS7BlNVAVi0R'] },
+  { username: 'usuario3', password: 'senha3', allowedFolders: ['1K4J5ErgUVtepbBpvnLVZrNcOzvUZmtWK', '1WZmMrGVvvR4EYQuCI7v3JsOKmu8sfVDJ'] },
+  { username: 'Leonardo', password: 'blk', allowedFolders: ['1W_IOIWlldNPc3trZVwxZHS7BlNVAVi0R',] },
+  { username: 'Gustavo', password: 'Nathalia260576', allowedFolders: ['1WZmMrGVvvR4EYQuCI7v3JsOKmu8sfVDJ',] },
+
+  
+
+];
+
+
+
+// Função para obter o nome da pasta
+function getFolderName(folderId) {
+  switch (folderId) {
+    case '1W_IOIWlldNPc3trZVwxZHS7BlNVAVi0R':
+      return 'Pasta privada (Leonardo)';
+    case '1WZ52aXanhCdjoymi8AWuQPApsPZOYOJ8':
+      return 'Pasta 2';
+    case '1WZmMrGVvvR4EYQuCI7v3JsOKmu8sfVDJ':
+      return 'Pasta privada (Gustavo)';
+    case '1W_IOIWlldNPc3trZVwxZHS7BlNVAVi0R':
+      return 'Pasta 4';
+    default:
+      return 'Pasta Desconhecida';
+  }
+}
+
+// Função para executar após o envio do formulário de login
+function handleLoginFormSubmit(event) {
+  event.preventDefault();
+  var username = document.getElementById('username').value;
+  var password = document.getElementById('password').value;
+
+  var user = users.find(u => u.username === username && u.password === password);
+
+  if (user) {
+    document.getElementById('ver_datas').style.display = 'block';
+    document.getElementById('gifs').style.display = 'block';
+
+
+
+    setTimeout(() => {
+      // Exibe o formulário de upload e esconde o de login
+      document.querySelector('.login-container').style.display = 'none';
+      document.querySelector('.upload-container').style.display = 'block';
+
+      // Preenche as opções do seletor de pasta com base nas permissões do usuário
+      var folderSelect = document.getElementById('folderSelect');
+      folderSelect.innerHTML = '';
+      user.allowedFolders.forEach(folder => {
+        var option = document.createElement('option');
+        option.value = folder;
+        option.textContent = ' ' + getFolderName(folder); // Nome da pasta
+        folderSelect.appendChild(option);
+      });
+
+      // Redireciona para a página de upload após 5 segundos
+      setTimeout(() => {
+        document.querySelector('.loader').classList.add('hidden');
+      }, 200);
+
+    }, 6000); // Tempo de simulação de login
+  } else {
+    alert('Credenciais inválidas. Tente novamente.');
+  }
+}
+
+// Event listener para   o envio do formulário de login
+const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', handleLoginFormSubmit);
+
+// Event listener para verificar mudanças de página
+window.addEventListener('unload', function() {
+  // Esconde o loader quando a página é descarregada (quando mudamos de tela)
+  document.querySelector('.loader').classList.add('hidden');
+});
+
+</script>
+</body>
+</html>
